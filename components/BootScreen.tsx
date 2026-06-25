@@ -37,11 +37,10 @@ export function BootProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isMobile = window.innerWidth < 768;
 
-    // Skip boot on mobile, reduced-motion, or when the page is loading in a
-    // background tab (timers get throttled to ≥1 s — the bar would stall at 0%).
-    if (isMobile || reduce || document.hidden) {
+    // Skip boot on reduced-motion or when the page is loading in a background
+    // tab (timers get throttled to ≥1 s — the bar would stall at 0%).
+    if (reduce || document.hidden) {
       setProgress(1);
       setBooted(true);
       setDone(true);

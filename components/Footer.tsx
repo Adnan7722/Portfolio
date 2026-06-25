@@ -40,7 +40,7 @@ export function Footer() {
             A
           </span>
           <span className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
-            Crafted with passion. Shipped with purpose.
+            Built different. Shipped with purpose.
           </span>
         </div>
 

@@ -50,9 +50,16 @@ export function Navbar() {
               href="/resume"
               target="_blank"
               rel="noreferrer"
-              className="rounded-full px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.14em] text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+              className="inline-flex items-center gap-1.5 rounded-full border border-accent/40 px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.14em] text-accent transition-all hover:border-accent hover:bg-accent/10"
             >
-              Resume ↗
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                <rect x="1" y="1" width="12" height="12" rx="1.2" stroke="currentColor" strokeWidth="1.2"/>
+                <rect x="3" y="1" width="6" height="4.5" fill="currentColor" opacity="0.3" rx="0.4"/>
+                <rect x="9.5" y="1.5" width="1.2" height="3" rx="0.3" fill="currentColor"/>
+                <rect x="3.5" y="7.5" width="7" height="4.5" rx="0.5" stroke="currentColor" strokeWidth="1"/>
+                <rect x="5.5" y="7.5" width="2" height="4.5" fill="currentColor" opacity="0.25"/>
+              </svg>
+              Resume
             </a>
           </div>
 
@@ -106,9 +113,16 @@ export function Navbar() {
                 href="/resume"
                 target="_blank"
                 rel="noreferrer"
-                className="block rounded-2xl px-4 py-3 font-mono text-sm uppercase tracking-[0.14em] text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+                className="flex items-center gap-2 rounded-2xl border border-accent/30 px-4 py-3 font-mono text-sm uppercase tracking-[0.14em] text-accent transition-all hover:border-accent hover:bg-accent/10"
               >
-                Resume ↗
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                  <rect x="1" y="1" width="12" height="12" rx="1.2" stroke="currentColor" strokeWidth="1.2"/>
+                  <rect x="3" y="1" width="6" height="4.5" fill="currentColor" opacity="0.3" rx="0.4"/>
+                  <rect x="9.5" y="1.5" width="1.2" height="3" rx="0.3" fill="currentColor"/>
+                  <rect x="3.5" y="7.5" width="7" height="4.5" rx="0.5" stroke="currentColor" strokeWidth="1"/>
+                  <rect x="5.5" y="7.5" width="2" height="4.5" fill="currentColor" opacity="0.25"/>
+                </svg>
+                Resume
               </a>
             </motion.div>
           )}

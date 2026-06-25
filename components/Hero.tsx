@@ -178,12 +178,17 @@ export function Hero() {
               href="/resume"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full px-4 py-3.5 text-sm font-medium text-muted transition-colors hover:text-foreground"
+              className="group inline-flex items-center gap-2 rounded-full border border-accent/40 px-6 py-3.5 font-mono text-sm uppercase tracking-[0.1em] text-accent transition-all hover:border-accent hover:bg-accent/10 hover:shadow-[0_0_24px_-6px_rgb(var(--accent)/0.5)]"
             >
-              Resume
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-                <path d="M7 17 17 7M17 7H8M17 7v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              {/* floppy disk */}
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                <rect x="1" y="1" width="12" height="12" rx="1.2" stroke="currentColor" strokeWidth="1.2"/>
+                <rect x="3" y="1" width="6" height="4.5" fill="currentColor" opacity="0.3" rx="0.4"/>
+                <rect x="9.5" y="1.5" width="1.2" height="3" rx="0.3" fill="currentColor"/>
+                <rect x="3.5" y="7.5" width="7" height="4.5" rx="0.5" stroke="currentColor" strokeWidth="1"/>
+                <rect x="5.5" y="7.5" width="2" height="4.5" fill="currentColor" opacity="0.25"/>
               </svg>
+              Resume
             </a>
           </div>
 

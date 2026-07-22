@@ -12,7 +12,7 @@ export const profile = {
   tagline: "I build fast, business-ready systems powered by AI.",
   location: "United States · Remote",
   available: true,
-  email: "adnan.muhammad1290@gmail.com",
+  email: "madnan.connect@gmail.com",
   linkedin: "https://www.linkedin.com/in/muhammadadnan111/",
   github: "https://github.com/Adnan7722",
   phone: "+1 940 277 9038",

@@ -112,5 +112,5 @@ No environment variables required.
 - Honors `prefers-reduced-motion` (canvas renders a single static frame; CSS
   animations collapse).
 - Theme persists to `localStorage`; applied before paint (no flash).
-- Neural canvas caps node count + DPR for cheap rendering.
+- Neural canvas caps node count + DPR for cheap rendering. 
 

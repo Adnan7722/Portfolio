@@ -112,6 +112,28 @@ export function ProjectModal({
                 ))}
               </div>
             </div>
+
+            {project.url && (
+              <div className="mt-8">
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-shadow hover:shadow-[0_0_50px_-10px_rgb(var(--glow))]"
+                >
+                  Open Live Demo
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M7 17 17 7M17 7H8M17 7v9"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

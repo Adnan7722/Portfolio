@@ -14,7 +14,7 @@ Pure CSS/SVG + Framer Motion — no WebGL.
 
 ## Stack
 
-- **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **Next.js 16** (App Router) + **React 19** + **TypeScript** 
 - **Tailwind CSS** (theme tokens via CSS variables → dark/light toggle)
 - **Framer Motion** (scroll reveals, magnetic buttons, modal, timeline draw)
 - **AI chatbot** — `@anthropic-ai/sdk` streaming from a Next route handler

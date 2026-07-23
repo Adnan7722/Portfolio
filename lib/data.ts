@@ -154,6 +154,26 @@ export const projects: Project[] = [
     accent: "amber",
     preview: "ml",
   },
+  {
+    id: "applify",
+    title: "Applify",
+    category: "Job Fair Platform",
+    year: "2024",
+    summary:
+      "Organizing job fair chaos into a structured platform — 35+ companies, application tracking, CV tips, and interview prep.",
+    description:
+      "Built during a visit to FAST NUCES job fair, Applify solves a real problem: students miss opportunities not because they lack skill, but because job fairs are overwhelming. I collected 35+ company links, cleaned broken ones, mapped them to career pages, and built a platform that lets students browse by category, track application status, access CV tips, and prep for interviews — all fully mobile-friendly so you can use it on the go.",
+    highlights: [
+      "35+ companies organized by category",
+      "Application status tracker",
+      "Category-based CV tips & keywords",
+      "Interview prep resources",
+      "Fully mobile-friendly",
+    ],
+    stack: ["React", "Next.js", "Tailwind CSS"],
+    accent: "primary",
+    preview: "erp",
+  },
 ];
 
 export type Certification = {

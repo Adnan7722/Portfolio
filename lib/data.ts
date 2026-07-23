@@ -94,6 +94,7 @@ export type Project = {
   stack: string[];
   accent: "primary" | "accent" | "amber";
   preview: "erp" | "extension" | "ml";
+  url?: string;
 };
 
 export const projects: Project[] = [
@@ -173,6 +174,7 @@ export const projects: Project[] = [
     stack: ["React", "Next.js", "Tailwind CSS"],
     accent: "primary",
     preview: "erp",
+    url: "https://v0-applify-2026-job-aggregator.vercel.app/",
   },
 ];
 

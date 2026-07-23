@@ -113,3 +113,4 @@ No environment variables required.
   animations collapse).
 - Theme persists to `localStorage`; applied before paint (no flash).
 - Neural canvas caps node count + DPR for cheap rendering.
+

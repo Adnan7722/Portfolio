@@ -19,7 +19,7 @@ Pure CSS/SVG + Framer Motion — no WebGL.
 - **Framer Motion** (scroll reveals, magnetic buttons, modal, timeline draw)
 - **AI chatbot** — `@anthropic-ai/sdk` streaming from a Next route handler
 - Zero image assets — every project "screenshot" is animated, code-drawn SVG/CSS
-- Fonts: Clash Display + Satoshi (Fontshare), JetBrains Mono / VT323 / Press Start 2P
+- Fonts: Clash Display + Satoshi (Fontshare), JetBrains Mono / VT323 / Press Start 2P 
 
 ## AI Assistant (chatbot)
 

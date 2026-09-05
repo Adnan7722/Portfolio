@@ -183,14 +183,30 @@ export type Certification = {
   issuer: string;
   badge: string;
   note: string;
+  url?: string;
 };
 
 export const certifications: Certification[] = [
+  {
+    title: "Claude 101",
+    issuer: "Anthropic",
+    badge: "Certified",
+    note: "Foundations of Claude and prompt engineering best practices.",
+    url: "https://verify.skilljar.com/c/ctsmbaw7zag3",
+  },
+  {
+    title: "Claude Code 101",
+    issuer: "Anthropic",
+    badge: "Certified",
+    note: "Getting started with Claude Code for AI-assisted development.",
+    url: "https://verify.skilljar.com/c/85cxoj5mogak",
+  },
   {
     title: "Claude Code in Action",
     issuer: "Anthropic",
     badge: "Certified",
     note: "Agentic coding workflows with Claude Code — building real software with AI.",
+    url: "https://verify.skilljar.com/c/tgf2uhicgxfa",
   },
   {
     title: "Claude for Developers",

@@ -16,11 +16,14 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GROQ_API_KEY
           script: |
             cd ~/portfolio
             git pull origin main
             npm install
-            export GROQ_API_KEY="${{ secrets.GROQ_API_KEY }}"
+            export GROQ_API_KEY="${GROQ_API_KEY}"
             npm run build
             pm2 restart portfolio
             pm2 save
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

@@ -131,9 +131,14 @@ export async function POST(req: Request) {
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         console.error("Gemini API error:", errorMsg);
-        controller.enqueue(
-          encoder.encode("\n\n[Error: " + errorMsg + "]")
-        );
+
+        const userMessage = errorMsg.includes("503") || errorMsg.includes("high demand")
+          ? "I'm taking a power nap right now! 😴 Too many people are asking me questions at once. Try again in a moment, and I'll be refreshed and ready to chat."
+          : errorMsg.includes("401") || errorMsg.includes("unauthorized")
+          ? "Oops! Something's wrong with my credentials. Please let Muhammad know at madnan.connect@gmail.com"
+          : "I'm a bit confused right now! 🤔 Something unexpected happened. Try asking again, or reach out to Muhammad if this keeps happening.";
+
+        controller.enqueue(encoder.encode(userMessage));
       } finally {
         controller.close();
       }

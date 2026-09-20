@@ -16,14 +16,15 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GROQ_API_KEY
+          envs: GEMINI_API_KEY
           script: |
             cd ~/portfolio
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
             npm install
             npm run build
-            echo "GROQ_API_KEY=${GROQ_API_KEY}" > .env.local
+            echo "GEMINI_API_KEY=${GEMINI_API_KEY}" > .env.local
             pm2 restart portfolio
             pm2 save
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

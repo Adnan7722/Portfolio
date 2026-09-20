@@ -1,11 +1,11 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { buildSystemPrompt } from "@/lib/knowledge";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Model: Together AI free model. Override with CHAT_MODEL env var.
-const MODEL = process.env.CHAT_MODEL || "meta-llama/Llama-2-7b-chat-hf";
+// Model: Google Gemini free tier. Override with CHAT_MODEL env var.
+const MODEL = process.env.CHAT_MODEL || "gemini-1.5-flash";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -50,10 +50,10 @@ export async function POST(req: Request) {
     return new Response("Too many requests. Please wait a moment.", { status: 429 });
   }
 
-  const apiKey = process.env.TOGETHER_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return new Response(
-      "The assistant isn't configured yet — set TOGETHER_API_KEY to enable it. Meanwhile, reach Muhammad via the contact section.",
+      "The assistant isn't configured yet — set GEMINI_API_KEY to enable it. Meanwhile, reach Muhammad via the contact section.",
       { status: 503 }
     );
   }
@@ -91,10 +91,8 @@ export async function POST(req: Request) {
     );
   }
 
-  const client = new OpenAI({
-    apiKey,
-    baseURL: "https://api.together.xyz/v1",
-  });
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: MODEL });
   const systemPrompt = buildSystemPrompt();
 
   // Log the LLM context for verification (shows what knowledge base is used)
@@ -110,25 +108,29 @@ export async function POST(req: Request) {
   const readable = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        const stream = await client.chat.completions.create({
-          model: MODEL,
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...history,
-          ],
-          stream: true,
-          max_tokens: 700,
+        const chat = model.startChat({
+          history: history.map((m) => ({
+            role: m.role === "user" ? "user" : "model",
+            parts: [{ text: m.content }],
+          })),
+          generationConfig: {
+            maxOutputTokens: 700,
+          },
         });
 
-        for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content;
+        const stream = await chat.sendMessageStream([
+          { text: `${systemPrompt}\n\nUser: ${history[history.length - 1].content}` },
+        ]);
+
+        for await (const chunk of stream.stream) {
+          const content = chunk.text?.();
           if (content) {
             controller.enqueue(encoder.encode(content));
           }
         }
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
-        console.error("Together AI API error:", errorMsg);
+        console.error("Gemini API error:", errorMsg);
         controller.enqueue(
           encoder.encode("\n\n[Error: " + errorMsg + "]")
         );

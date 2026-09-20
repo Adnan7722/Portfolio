@@ -1,13 +1,14 @@
-import Groq from "groq-sdk";
+import OpenAI from "openai";
 import { buildSystemPrompt } from "@/lib/knowledge";
 
-// Groq API works with Node.js runtime.
+// Ollama API works with Node.js runtime.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Model; defaults to Llama 3.1 70B (available on free tier). Override with CHAT_MODEL env var.
-// See https://console.groq.com/docs/models for available models.
-const MODEL = process.env.CHAT_MODEL || "llama-3.1-70b-versatile";
+// Model; defaults to Mistral (free, self-hosted via Ollama). Override with CHAT_MODEL env var.
+// Ollama runs locally at http://localhost:11434
+const MODEL = process.env.CHAT_MODEL || "mistral";
+const OLLAMA_API_URL = process.env.OLLAMA_API_URL || "http://localhost:11434/v1";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -52,10 +53,10 @@ export async function POST(req: Request) {
     return new Response("Too many requests. Please wait a moment.", { status: 429 });
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
+  // Ollama doesn't require an API key for local usage
+  if (!OLLAMA_API_URL) {
     return new Response(
-      "The assistant isn't configured yet — set GROQ_API_KEY to enable it. Meanwhile, reach Muhammad via the contact section.",
+      "The assistant isn't configured yet — start Ollama locally to enable it. Meanwhile, reach Muhammad via the contact section.",
       { status: 503 }
     );
   }
@@ -93,7 +94,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const groq = new Groq({ apiKey });
+  const client = new OpenAI({ baseURL: OLLAMA_API_URL, apiKey: "ollama" });
   const systemPrompt = buildSystemPrompt();
 
   // Log the LLM context for verification (shows what knowledge base is used)
@@ -109,7 +110,7 @@ export async function POST(req: Request) {
   const readable = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        const stream = await groq.chat.completions.create({
+        const stream = await client.chat.completions.create({
           model: MODEL,
           messages: [
             { role: "system", content: systemPrompt },
@@ -127,7 +128,7 @@ export async function POST(req: Request) {
         }
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
-        console.error("Groq API error:", errorMsg);
+        console.error("Ollama API error:", errorMsg);
         controller.enqueue(
           encoder.encode("\n\n[Error: " + errorMsg + "]")
         );

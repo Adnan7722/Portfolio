@@ -5,9 +5,9 @@ import { buildSystemPrompt } from "@/lib/knowledge";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Model; defaults to Llama 3.3 70B (fastest). Override with CHAT_MODEL env var.
+// Model; defaults to Mixtral (available on free tier). Override with CHAT_MODEL env var.
 // See https://console.groq.com/docs/models for available models.
-const MODEL = process.env.CHAT_MODEL || "llama-3.3-70b-versatile";
+const MODEL = process.env.CHAT_MODEL || "mixtral-8x7b-32768";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 

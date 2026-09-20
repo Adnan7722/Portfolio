@@ -21,8 +21,8 @@ jobs:
             cd ~/portfolio
             git pull origin main
             npm install
-            export GROQ_API_KEY="${GROQ_API_KEY}"
             npm run build
+            echo "GROQ_API_KEY=${GROQ_API_KEY}" > .env.local
             pm2 restart portfolio
             pm2 save
         env:

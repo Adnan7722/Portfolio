@@ -1,14 +1,11 @@
-import OpenAI from "openai";
+import { HfInference } from "@huggingface/inference";
 import { buildSystemPrompt } from "@/lib/knowledge";
 
-// Ollama API works with Node.js runtime.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Model; defaults to Mistral (free, self-hosted via Ollama). Override with CHAT_MODEL env var.
-// Ollama runs locally at http://localhost:11434
-const MODEL = process.env.CHAT_MODEL || "mistral";
-const OLLAMA_API_URL = process.env.OLLAMA_API_URL || "http://localhost:11434/v1";
+// Model: free Hugging Face model. Override with CHAT_MODEL env var.
+const MODEL = process.env.CHAT_MODEL || "mistralai/Mistral-7B-Instruct-v0.1";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -53,10 +50,10 @@ export async function POST(req: Request) {
     return new Response("Too many requests. Please wait a moment.", { status: 429 });
   }
 
-  // Ollama doesn't require an API key for local usage
-  if (!OLLAMA_API_URL) {
+  const apiKey = process.env.HF_API_KEY;
+  if (!apiKey) {
     return new Response(
-      "The assistant isn't configured yet — start Ollama locally to enable it. Meanwhile, reach Muhammad via the contact section.",
+      "The assistant isn't configured yet — set HF_API_KEY to enable it. Meanwhile, reach Muhammad via the contact section.",
       { status: 503 }
     );
   }
@@ -94,7 +91,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const client = new OpenAI({ baseURL: OLLAMA_API_URL, apiKey: "ollama" });
+  const hf = new HfInference(apiKey);
   const systemPrompt = buildSystemPrompt();
 
   // Log the LLM context for verification (shows what knowledge base is used)
@@ -110,25 +107,29 @@ export async function POST(req: Request) {
   const readable = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        const stream = await client.chat.completions.create({
+        // Build conversation string for Hugging Face
+        const messages = [
+          { role: "system", content: systemPrompt },
+          ...history,
+        ];
+        const prompt = messages
+          .map((m) => `${m.role === "system" ? "System" : "User"}: ${m.content}`)
+          .join("\n");
+
+        const stream = await hf.textGenerationStream({
           model: MODEL,
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...history,
-          ],
-          stream: true,
-          max_tokens: 700,
+          inputs: prompt,
+          parameters: { max_new_tokens: 700 },
         });
 
         for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content;
-          if (content) {
-            controller.enqueue(encoder.encode(content));
+          if (chunk.token?.text) {
+            controller.enqueue(encoder.encode(chunk.token.text));
           }
         }
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
-        console.error("Ollama API error:", errorMsg);
+        console.error("Hugging Face API error:", errorMsg);
         controller.enqueue(
           encoder.encode("\n\n[Error: " + errorMsg + "]")
         );

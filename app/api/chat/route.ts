@@ -1,11 +1,11 @@
-import { HfInference } from "@huggingface/inference";
+import OpenAI from "openai";
 import { buildSystemPrompt } from "@/lib/knowledge";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Model: free Hugging Face model. Override with CHAT_MODEL env var.
-const MODEL = process.env.CHAT_MODEL || "mistralai/Mistral-7B-Instruct-v0.1";
+// Model: Together AI free model. Override with CHAT_MODEL env var.
+const MODEL = process.env.CHAT_MODEL || "meta-llama/Llama-2-7b-chat-hf";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -50,10 +50,10 @@ export async function POST(req: Request) {
     return new Response("Too many requests. Please wait a moment.", { status: 429 });
   }
 
-  const apiKey = process.env.HF_API_KEY;
+  const apiKey = process.env.TOGETHER_API_KEY;
   if (!apiKey) {
     return new Response(
-      "The assistant isn't configured yet — set HF_API_KEY to enable it. Meanwhile, reach Muhammad via the contact section.",
+      "The assistant isn't configured yet — set TOGETHER_API_KEY to enable it. Meanwhile, reach Muhammad via the contact section.",
       { status: 503 }
     );
   }
@@ -91,7 +91,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const hf = new HfInference(apiKey);
+  const client = new OpenAI({
+    apiKey,
+    baseURL: "https://api.together.xyz/v1",
+  });
   const systemPrompt = buildSystemPrompt();
 
   // Log the LLM context for verification (shows what knowledge base is used)
@@ -107,29 +110,25 @@ export async function POST(req: Request) {
   const readable = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        // Build conversation string for Hugging Face
-        const messages = [
-          { role: "system", content: systemPrompt },
-          ...history,
-        ];
-        const prompt = messages
-          .map((m) => `${m.role === "system" ? "System" : "User"}: ${m.content}`)
-          .join("\n");
-
-        const stream = await hf.textGenerationStream({
+        const stream = await client.chat.completions.create({
           model: MODEL,
-          inputs: prompt,
-          parameters: { max_new_tokens: 700 },
+          messages: [
+            { role: "system", content: systemPrompt },
+            ...history,
+          ],
+          stream: true,
+          max_tokens: 700,
         });
 
         for await (const chunk of stream) {
-          if (chunk.token?.text) {
-            controller.enqueue(encoder.encode(chunk.token.text));
+          const content = chunk.choices[0]?.delta?.content;
+          if (content) {
+            controller.enqueue(encoder.encode(content));
           }
         }
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
-        console.error("Hugging Face API error:", errorMsg);
+        console.error("Together AI API error:", errorMsg);
         controller.enqueue(
           encoder.encode("\n\n[Error: " + errorMsg + "]")
         );

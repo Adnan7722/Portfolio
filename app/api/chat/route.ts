@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // Model: Google Gemini free tier. Override with CHAT_MODEL env var.
-const MODEL = process.env.CHAT_MODEL || "gemini-2.5-flash";
+const MODEL = process.env.CHAT_MODEL || "gemini-3.6-flash";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
